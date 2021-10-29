@@ -6,5 +6,3 @@ require (
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/sanity-io/go-groq v0.0.0-20211013092931-044c84f66026
 )
-
-replace github.com/sanity-io/go-groq => /Users/alex/Projects/Sanity/go-groq
