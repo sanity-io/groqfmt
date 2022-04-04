@@ -4,17 +4,24 @@ on:
   push:
 
 jobs:
-  scheduled:
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
-    - name: Check out this repo
-      uses: actions/checkout@v2
-    - name: Set up Go
-      uses: actions/setup-go@v2
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
       with: {go-version: '^1.18'}
-    - name: Download dependencies
-      run: go mod download
-    - name: Build
-      run: go build ./...
-    - name: Test
-      run: go test ./...
+    - run: go mod download
+    - run: go build ./...
+    - run: go test ./...
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-go@v2
+    - uses: actions/checkout@v2
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v2
+      with:
+        version: v1.45.2
