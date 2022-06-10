@@ -13,11 +13,11 @@ groqfmt INPUT > OUTPUT
 or:
 
 ```sh
-cat INPUT | groqfmt > OUTPUT
+groqfmt < INPUT > OUTPUT
 ```
 
 or
 
 ```sh
-cat INPUT | groqfmt -o OUTPUT
+groqfmt < INPUT -o OUTPUT
 ```
