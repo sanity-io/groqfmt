@@ -63,7 +63,7 @@ func processFile(fileName string) error {
 	}
 
 	if opts.Output != "" {
-		return ioutil.WriteFile(opts.Output, []byte(formatted), 0644)
+		return os.WriteFile(opts.Output, []byte(formatted), 0644)
 	}
 
 	if opts.WriteToSource {
@@ -73,7 +73,7 @@ func processFile(fileName string) error {
 		if fileName == "-" {
 			return errors.New("cannot use -w with stdin")
 		}
-		return ioutil.WriteFile(fileName, []byte(formatted), 0644)
+		return os.WriteFile(fileName, []byte(formatted), 0644)
 	}
 
 	_, err = os.Stdout.Write([]byte(formatted))
@@ -82,14 +82,14 @@ func processFile(fileName string) error {
 
 func readFile(fileName string) (string, error) {
 	if fileName == "-" {
-		b, err := ioutil.ReadAll(os.Stdin)
+		b, err := io.ReadAll(os.Stdin)
 		if err != nil {
 			return "", err
 		}
 		return string(b), nil
 	}
 
-	b, err := ioutil.ReadFile(fileName)
+	b, err := os.ReadFile(fileName)
 	if err != nil {
 		return "", err
 	}
