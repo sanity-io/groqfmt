@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 
 	"github.com/jessevdk/go-flags"
@@ -20,21 +20,21 @@ var opts struct {
 }
 
 func main() {
-	parser := flags.NewParser(&opts, flags.HelpFlag|flags.PassDoubleDash)
-	parser.Usage = "[- | FILE]"
+	p := flags.NewParser(&opts, flags.HelpFlag|flags.PassDoubleDash)
+	p.Usage = "[- | FILE]"
 
-	args, err := parser.Parse()
+	args, err := p.Parse()
 	if err != nil {
 		if e, ok := err.(*flags.Error); ok && e.Type == flags.ErrHelp {
-			parser.WriteHelp(os.Stdout)
+			p.WriteHelp(os.Stdout)
 			os.Exit(2)
 		}
-		fmt.Fprintf(os.Stderr, "fatal: %s\n", err)
+		_, _ = fmt.Fprintf(os.Stderr, "fatal: %s\n", err)
 		os.Exit(1)
 	}
 
 	if err := run(args); err != nil {
-		fmt.Fprintf(os.Stderr, "fatal: %s\n", err)
+		_, _ = fmt.Fprintf(os.Stderr, "fatal: %s\n", err)
 		os.Exit(1)
 	}
 }
