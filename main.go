@@ -5,11 +5,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 
 	"github.com/jessevdk/go-flags"
 
+	"github.com/sanity-io/go-groq/ast"
 	"github.com/sanity-io/go-groq/parser"
 	"github.com/sanity-io/go-groq/print"
 )
@@ -17,6 +19,7 @@ import (
 var opts struct {
 	Output        string `short:"o" long:"output" description:"Write to file instead of standard output" value-name:"FILE"`
 	WriteToSource bool   `short:"w" description:"Write back to input file"`
+	Compact       bool   `short:"c" long:"compact" description:"Compact syntax"`
 }
 
 func main() {
@@ -97,13 +100,20 @@ func readFile(fileName string) (string, error) {
 }
 
 func format(query string) (string, error) {
-	a, err := parser.Parse(query, parser.WithParamNodes())
+	q, err := parser.Parse(query, parser.WithParamNodes())
 	if err != nil {
 		return "", fmt.Errorf("parsing query: %w", err)
 	}
 
+	var printer func(query ast.Expression, w io.Writer) error
+	if opts.Compact {
+		printer = print.Print
+	} else {
+		printer = print.PrettyPrint
+	}
+
 	var buf bytes.Buffer
-	if err := print.PrettyPrint(a, &buf); err != nil {
+	if err := printer(q, &buf); err != nil {
 		return "", fmt.Errorf("formatting query: %w", err)
 	}
 	if _, err := buf.Write([]byte("\n")); err != nil {
