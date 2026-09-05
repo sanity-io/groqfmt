@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-go@v2
-      with: {go-version: '^1.18'}
+      with: {go-version: '^1.27.1'}
     - run: go mod download
     - run: go build ./...
     - run: go test ./...
@@ -21,6 +21,6 @@ jobs:
     - uses: actions/setup-go@v2
     - uses: actions/checkout@v2
     - name: golangci-lint
-      uses: golangci/golangci-lint-action@v2
+      uses: golangci/golangci-lint-action@5c56cd6c9dc07901af25baab6f2b0d9f3b7c3018 # v2
       with:
-        version: v1.45.2
+        version: v1.64.8
